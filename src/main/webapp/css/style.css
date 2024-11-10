@@ -1,0 +1,116 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: #487eb0;
+}
+
+.signup-form {
+    color: #fff;
+    width: 300px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: -15px 15px 15px rgba(6, 17, 47, 0.7);
+    background: linear-gradient(230deg, rgba(53, 57, 74, 0) 0%, rgb(0, 0, 0) 100%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+}
+
+
+
+.signup-form input {
+    color:white;
+    display: block;
+    width: 100%;
+    padding: 0 16px;
+    height: 44px;
+    text-align: center;
+    box-sizing: border-box;
+    outline: none;
+    border: none;
+    font-family: "montserrat", sans-serif;
+}
+
+.txtb {
+    margin: 20px 0;
+    background: rgba(255, 255, 255, .5);
+    border-radius: 6px;
+}
+
+.signup-form .sex {
+    display: block;
+    width: 100%;
+    padding: 0 16px;
+    height: 44px;
+    text-align: center;
+    outline: none;
+    border: none;
+    box-sizing: border-box;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, .5);
+    font-family: "montserrat", sans-serif;
+    text-align: left;
+    margin: 0 auto;
+}
+
+.signup-form .sex span {
+    display: inline-block;
+    width: 80px;
+    text-align: left;
+    height: 40px;
+    line-height: 40px;
+}
+
+.signup-form .sex .dx {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+}
+
+.signup-form .txtb2 {
+    display: inline-block;
+    width: 80px;
+    background: rgba(255, 255, 255, .5);
+    border-radius: 6px;
+    position: relative;
+    top: -20px;
+    left: -8px;
+}
+
+.signup-form .verufyCodeimg {
+    display: inline-block;
+    width: 200px;
+    height: 44px;
+    position: relative;
+    right: -8px;
+}
+
+.signup-btn {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    background: #487eb0;
+    color: #fff;
+    border-radius: 44px;
+    cursor: pointer;
+    transition: 0.8s;
+}
+
+.signup-btn:hover {
+    transform: scale(0.96);
+}
+
+.signup-form a {
+    text-decoration: none;
+    color: #fff;
+    font-family: "montserrat", sans-serif;
+    font-size: 14px;
+    padding: 10px;
+    transition: 0.8s;
+    display: block;
+}
+
+.signup-form a:hover {
+    background: rgba(0, 0, 0, .3);
+}

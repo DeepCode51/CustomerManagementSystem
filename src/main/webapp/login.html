@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>登录页面</title>
+    <!--必要样式-->
+   <link href="/css/styles2.css" rel="stylesheet" type="text/css" />
+   <link href="/css/demo.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body style="background-image: url('/images/2.png');">
+<div class='login'>
+    <div class='login_title'>
+        <span>欢迎登录CRM客户管理系统</span>
+    </div>
+    <div class='login_fields'>
+        <div class='login_fields__user'>
+            <div class='icon'>
+                <img alt="" src='/images/user_icon_copy.png'>
+            </div>
+            <input  id="username" name="login" placeholder='用户名' maxlength="16" type='text' autocomplete="off" value=""  />
+
+        </div>
+        <div class='login_fields__password'>
+            <div class='icon'>
+                <img alt="" src='/images/lock_icon_copy.png'>
+            </div>
+            <input name="pwd" id="passwd" placeholder='密码' maxlength="16" type='password' autocomplete="off">
+            <div class='validation' style="opacity: 1; right: 45px;height: 50px;line-height: 50px;">
+                <img alt="" src='/images/close.png' style="width: 22px;" id="eyes">
+            </div>
+        </div>
+        <div class='login_fields__password'>
+
+        </div>
+        <!-- 分割线 -->
+        <div style="height: 0.1px; width: 82%; background-color: #D3D7F7; margin: 5px 33px;"></div>
+        <!-- 登录 -->
+        <div class='login_fields__submit' style="clear: both;">
+            <input type='button' value='登录' id="btn">
+        </div>
+    </div>
+    <div class='disclaimer'>
+        <a href="reg.html" style="text-decoration:none"> <p>没有账户？注册</p></a>
+    </div>
+</div>
+<script type="text/javascript">
+    // 密码是否可见
+    var input_pwd = document.getElementById('passwd');
+    var eye = document.getElementById('eyes');
+    var flag = 0;
+
+    eye.onclick = function() {
+        //文本框，显示密码
+        if (flag == 0) {
+            eye.src = "/images/open.png";
+            input_pwd.type = 'text';
+            flag = 1;
+        } else {
+            //密码框，隐藏密码
+            input_pwd.type = 'password';
+            eye.src = "/images/close.png";
+            flag = 0;
+        }
+    }
+</script>
+     <script src="js/jquery-3.6.0.js"></script>
+<script>
+    //给登录按钮绑定事件
+    $("#btn").click(function (){
+        //获取数据
+        var username = $("#username").val();
+        var passwd = $("#passwd").val();
+        //发送请求
+        $.ajax({
+            url:"/crm/login",
+            type:"post",
+            data:{
+                username:username,
+                passwd:passwd
+            },
+            success:function (repTxt){
+                if(repTxt.data==-2)
+                {
+                    alert("用户名不存在！");
+                    alert(repTxt.message);
+                    return;
+                }
+                if (repTxt.data==-1)
+                {
+                    alert("密码错误！");
+                    alert(repTxt.message);
+                    return;
+                }
+                alert("登陆成功！");
+                location.href="/emp/index.html?eid="+repTxt.data;
+            }
+            });
+    });
+
+</script>
+
+</body>
+
+</html>

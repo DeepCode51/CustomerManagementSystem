@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: lavender;
+        }
+
+        #main {
+            width: 600px;
+            height: 400px;
+            border: 1px solid gray;
+            margin: 0 auto;
+            margin-top: 20px;
+            text-align: center;
+            box-shadow: 0 0 5px black;
+        }
+
+        #main h1 {
+            margin: 40px;
+        }
+
+        #main input {
+            margin-bottom: 10px;
+            line-height: 30px;
+            height: 30px;
+            width: 320px;
+        }
+
+        #main #btn {
+            width: 230px;
+            margin-top: 40px;
+            height: 40px;
+        }
+    </style>
+</head>
+
+<body style="background-image: url('../images/03(1).png');">
+<div id="main">
+    <h1>修改密码</h1>
+    <span>输入旧密码：</span>
+    <input type="password" id="oldpasswd"><br>
+    <span>输入新密码：</span>
+    <input type="password" id="newpasswd"><br>
+    <span>确认新密码：</span>
+    <input type="password" id="newpasswd2"><br>
+
+    <input type="button" id="btn" value="修改密码">
+</div>
+
+<script src="../js/jquery-3.6.0.js">
+</script>
+
+<script>
+    $("#btn").click(function (){
+        //获取值
+        var oldpasswd = $("#oldpasswd").val();
+        var newpasswd = $("#newpasswd").val();
+        var newpasswd2 = $("#newpasswd2").val();
+
+        var url = location.href;
+        var eid = url.substring(url.lastIndexOf("=")+1);
+
+        //数据校验
+        if(newpasswd!=newpasswd2){
+            alert("确认密码不一致");
+            return;
+        }
+        $.ajax({
+            url: "/crm/updatepasswd",
+            type: "post",
+            data: {
+                  eid:eid,
+                 passwd:oldpasswd,
+                newpasswd:newpasswd
+            },
+            success: function(respTxt){
+                     if(respTxt.data==-1){
+                         alert("原密码错误！");
+                         return;
+                     }
+                     if (respTxt.data==1){
+                         alert("修改成功");
+                         window.parent.location.href="../login.html";
+                     }
+            }
+        });
+    });
+</script>
+</body>
+
+</html>

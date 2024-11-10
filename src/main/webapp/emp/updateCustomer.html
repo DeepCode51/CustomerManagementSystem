@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        h1 {
+            margin-top: 10px;
+        }
+        
+        #addCus {
+            width: 600px;
+            height: 250px;
+            margin: 0 auto;
+            border: 1px solid gray;
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            box-shadow: 0 0 5px black;
+        }
+        
+        #addCus span {
+            display: inline-block;
+            height: 30px;
+            line-height: 30px;
+            width: 80px;
+            text-align: left;
+        }
+        
+        #addCus .ip {
+            width: 220px;
+            height: 20px;
+            line-height: 20px;
+            margin-top: 10px;
+        }
+        
+        #sex {
+            width: 220px;
+            display: inline-block;
+            text-align: left;
+            margin-top: 10px;
+        }
+        
+        #btn {
+            height: 40px;
+            line-height: 20px;
+            width: 100px;
+            margin-top: 20px;
+            margin-left: -40px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 style="text-align: center;">修改客户</h1>
+    <div id="addCus">
+        <span >客户姓名:</span><input type="text" id="cname" class="ip" readonly style="background-color:transparent;border:0;"><br>
+        <span>性别：</span>
+        <div id="sex">
+            <input type="radio" name="csex" value="男">男
+            <input type="radio" name="csex" value="女">女
+        </div><br>
+        <span>电话：</span><input type="text" id="ctel" class="ip"><br>
+        <span>职位：</span><input type="text" id="cjob" class="ip"><br>
+        <span>公司：</span><input type="text" id="ccompany" class="ip"><br>
+
+        <input type="button" value="修改客户" id="btn2">
+    </div>
+ <script src="../js/jquery-3.6.0.js"></script>
+<script>
+    //回填数据
+    var url = location.href;
+    var cid = url.substring(url.lastIndexOf("=")+1);
+
+    $.ajax({
+        url:"/cus/"+cid,
+        type:"get",
+        data:{
+        },
+        success:function (respTxt){
+            //获取客户信息回填
+            var cus = respTxt.data;
+            $("#cname").val(cus.cname);
+            if(cus.csex == "男"){
+                $("input[name='csex']:first").attr("checked","true");
+            }else {
+                $("input[name='csex']:last").attr("checked","true");
+            }
+            $("#ctel").val(cus.ctel);
+            $("#cjob").val(cus.cjob);
+            $("#ccompany").val(cus.ccompany);
+        }
+    });
+    //修改请求
+    $("#btn2").click(function() {
+        var cname = $("#cname").val();
+        var csex = $("input[name='csex']:checked").val();
+        var ctel = $("#ctel").val();
+        var cjob = $("#cjob").val();
+        var ccompany = $("#ccompany").val();
+
+        //校验？？
+        //请求
+        $.ajax({
+            url: "/cus",
+            type: "post",
+            data: {
+                cid: cid,
+                cname: cname,
+                csex: csex,
+                ctel: ctel,
+                cjob: cjob,
+                ccompany: ccompany,
+                _method : "put"
+            },
+
+            success: function(respTxt) {
+                //alert(respTxt.code);
+                if (respTxt.data == 1) {
+                    alert("修改成功！");
+                    location.href = "customer.html";
+                } else {
+                    alert("修改失败！");
+                }
+            }
+        });
+    });
+
+
+</script>
+
+
+</body>
+
+</html>

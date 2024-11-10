@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        h1 {
+            margin-top: 10px;
+        }
+        
+        #addCus {
+            width: 600px;
+            height: 250px;
+            margin: 0 auto;
+            border: 1px solid gray;
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            box-shadow: 0 0 5px black;
+        }
+        
+        #addCus span {
+            display: inline-block;
+            height: 30px;
+            line-height: 30px;
+            width: 80px;
+            text-align: left;
+        }
+        
+        #addCus .ip {
+            width: 220px;
+            height: 20px;
+            line-height: 20px;
+            margin-top: 10px;
+        }
+        
+        #sex {
+            width: 220px;
+            display: inline-block;
+            text-align: left;
+            margin-top: 10px;
+        }
+        
+        #btn {
+            height: 40px;
+            line-height: 20px;
+            width: 100px;
+            margin-top: 20px;
+            margin-left: -40px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 style="text-align: center;">添加跟踪信息</h1>
+    <div id="addCus">
+        <span>客户姓名：</span>
+        <select name="" id="cid" class="ip">
+            <option value="0">请选择跟踪客户</option>
+        </select><br>
+        <div>
+            <span class="s1">跟踪记录：</span>
+            <textarea name="" id="record" class="ip" cols="30" rows="10" style="height: 100px;"></textarea>
+        </div>
+        <span>客户意向：</span>
+        <select name="" id="intention" class="ip">
+            <option value="初步沟通">初步沟通</option>
+            <option value="考虑中">考虑中</option>
+            <option value="有明确意向">有明确意向</option>
+            <option value="签订合同">签订合同</option>
+            <option value="没有意向">没有意向</option>
+        </select><br>
+
+        <input type="button" value="添加跟踪信息" id="btn">
+    </div>
+
+    <script src="../js/jquery-3.6.0.js"></script>
+
+    <script>
+        var url = location.href;
+        // alert(url);
+        var eid = url.substring(url.lastIndexOf("=") + 1);
+
+        //初始化客户信息
+        $.ajax({
+            url: "/cus/findall",
+            type: "get",
+            success: function(respTxt) {
+                var customers = respTxt.data;
+                for (var cus of customers) {
+                    var option = $("<option value='" + cus.cid + "'>" + cus.cname + "</option>");
+                    $("select[id='cid']").append(option);
+                }
+            }
+        });
+
+        $("#btn").click(function() {
+            //获取数据
+            var cid = $("select[id='cid']").val();
+            // alert(cid);
+            if (cid == 0) {
+                alert("请选择客户");
+                return;
+            }
+
+            var record = $("#record").val();
+            var intention = $("select[id='intention']").val();
+
+            //校验？？
+
+            //请求
+            $.ajax({
+                // headers: {
+                //     token: token
+                // },
+                url: "/tra",
+                type: "post",
+                data: {
+                    cid: cid,
+                    eid: eid,
+                    record: record,
+                    intention: intention
+                },
+                success: function(respTxt) {
+                    alert(respTxt.data);
+                    if (respTxt.data == 1) {
+                        alert("添加成功！");
+                        location.href = "track.html";
+                    } else {
+                        alert("添加失败！");
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

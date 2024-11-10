@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--扫描bean-->
+    <context:component-scan base-package="com.zrzcrm">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!--  整合mybatis -->
+    <!-- 将mybatis的配置交给spring配置-->
+    <!-- 将mybatis的mapper 交给spring容器托管-->
+
+    <!--  数据源  -->
+    <context:property-placeholder location="classpath*:db.properties"></context:property-placeholder>
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <!--  四条连接信息-->
+        <property name="driverClassName" value="${jdbc.driverClassName}"></property>
+        <property name="url" value="${jdbc.url}"></property>
+        <property name="username" value="${jdbc.user}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+
+        <!--连接池信息-->
+        <property name="maxActive" value="30"></property>
+        <property name="minIdle" value="10"></property>
+        <property name="initialSize" value="15"></property>
+    </bean>
+
+    <!--   会话工厂-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="configLocation" value="classpath:mybatis.xml"></property>
+        <!-- 映射文件的路径-->
+        <property name="mapperLocations" value="classpath*:mapper/*.xml"></property>
+        <!-- 别名-->
+        <property name="typeAliasesPackage" value="com.zrzcrm.domain"></property>
+    </bean>
+
+    <!--    实例化mapper-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.zrzcrm.mapper"></property>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+    </bean>
+
+</beans>

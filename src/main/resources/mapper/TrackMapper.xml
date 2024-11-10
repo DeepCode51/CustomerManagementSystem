@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zrzcrm.mapper.TrackMapper">
+    <!--    添加-->
+    <insert id="addTrack" parameterType="Track">
+        insert into track values (null,#{cid},#{eid},#{record},#{intention})
+    </insert>
+    <!--    删除-->
+    <delete id="deleteTrack">
+        delete from track where tid = #{tid}
+    </delete>
+    <!--    修改-->
+    <update id="updateTrack" parameterType="Track">
+        update track set record = #{record},intention = #{intention} where tid = #{tid}
+    </update>
+    <!--    查询-->
+    <select id="findAllTrack" resultType="Track">
+        select * from track
+    </select>
+    <!--    单查-->
+    <select id="findOneTrack" resultType="Track">
+        select * from track where tid = #{tid}
+    </select>
+</mapper>

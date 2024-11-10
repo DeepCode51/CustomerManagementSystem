@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>客户界面</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            margin-top: 10px;
+            margin-left: 20px;
+        }
+        table {
+            width: 1253px;
+            margin: 5px;
+        }
+
+        table th {
+            color: white;
+            text-align: center;
+            background-color: #334259;
+        }
+
+        table td {
+            text-align: center;
+        }
+
+        a {
+            display: inline-block;
+            text-emphasis: none;
+            text-decoration: none;
+            color: white;
+        }
+        span{
+            background-color: #334259;
+            color: white;
+            border-radius: 20%;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1 style="text-align: center">客户信息</h1>
+<a href="addCustomer.html"><input type="button"  value="添加客户" style="font-size: 20px"></a>
+<table id="table1"     border="1" cellspacing="0"   style="height: 300px;">
+</table>
+
+<div style="width: 300px;margin: 0 auto">
+    <span onclick="firstPage()" style="background-color:#334259 ">首页</span>
+    <span onclick="prePage()">上一页</span>
+    <span>第<b id="pageNum">0</b>页</span>
+    <span onclick="nextPage()">下一页</span>
+    <span onclick="lastPage()">尾页</span>
+
+
+
+</div>
+<div style="width: 200px;margin: 0 auto">
+    <span>共<b id="total">0</b>条数据</span><span style="display: inline-block; width: 5px"></span>
+    <span>共<b id="pages">0</b>页</span>
+</div>
+<script src="/js/jquery-3.6.0.js"></script>
+<script>
+    var pageNum = 1;
+    var pageSize = 5;
+    requestMethod(pageNum, pageSize);
+    //首页
+    function firstPage() {
+        pageNum = 1;
+        requestMethod(pageNum, pageSize);
+    }
+    //上一页
+    function prePage() {
+        if (pageNum <= 1) {
+            alert("没有上一页");
+            return;
+        }
+        pageNum--;
+        requestMethod(pageNum, pageSize);
+    }
+    //下一页
+    function nextPage() {
+        if (pageNum >= $("#pages").html()) {
+            alert("没有下一页");
+            return;
+        }
+        pageNum++;
+        requestMethod(pageNum, pageSize);
+    }
+    //尾页
+    function lastPage() {
+        pageNum = $("#pages").html();
+        requestMethod(pageNum, pageSize);
+    }
+
+    function requestMethod(pageNum, pageSize) {
+        //查询所有客户
+        $.ajax({
+            url: "/cus",
+            type: "get",
+            data: {
+                pageNum: pageNum,
+                pageSize: pageSize
+            },
+            success: function(respTxt) {
+                var customers = respTxt.data;
+                //将table置空，达到不会将上次查询数据继续留在页面的目的
+                $("#table1").empty();
+                var tr1 = $("<tr></tr>");
+
+                var th1 = $("<th style='height: 20px'>客户编号</th>");
+                var th2 = $("<th style='height: 20px'>姓名</th>");
+                var th3 = $("<th style='height: 20px'>性别</th>");
+                var th4 = $("<th style='height: 20px'>电话</th>");
+                var th5 = $("<th style='height: 20px'>职位</th>");
+                var th6 = $("<th style='height: 20px'>公司</th>");
+                var th7 = $("<th style='height: 20px'>操作</th>");
+                tr1.append(th1);
+                tr1.append(th2);
+                tr1.append(th3);
+                tr1.append(th4);
+                tr1.append(th5);
+                tr1.append(th6);
+                tr1.append(th7);
+                $("#table1").append(tr1);
+                if ((customers.size != 0)) {
+                    for (var cus of customers.list) {
+
+
+                        var tr = $("<tr></tr>");
+
+                        var td1 = $("<td>" + cus.cid + "</td>");
+                        var td2 = $("<td>" + cus.cname + "</td>");
+                        var td3 = $("<td>" + cus.csex + "</td>");
+                        var td4 = $("<td>" + cus.ctel + "</td>");
+                        var td5 = $("<td>" + cus.cjob + "</td>");
+                        var td6 = $("<td>" + cus.ccompany + "</td>");
+                        var td7 = $("<td><span style='margin-left: 10px;' class='sc'>删除</span><span style='margin-left: 10px;' class='xg'>修改</span></td>");
+
+                        tr.append(td1);
+                        tr.append(td2);
+                        tr.append(td3);
+                        tr.append(td4);
+                        tr.append(td5);
+                        tr.append(td6);
+                        tr.append(td7);
+                        //放在页面中
+
+                        $("#table1").append(tr);
+                    }
+                    //初始化分页
+                    $("#total").html(customers.total);
+                    $("#pageNum").html(customers.pageNum);
+                    $("#pages").html(customers.pages);
+
+                }
+            }
+        });
+    };
+    //删除
+    $("#table1").on("click", ".sc", function() {
+        var flag = window.confirm("你确定要删除这条数据吗？");
+        if (!flag) {
+            return;
+        }
+
+        //获取值
+        var td1 = $(this).parent().prevAll().last();
+        var cid = td1.html();
+
+        //删除请求
+        $.ajax({
+            url: "/cus/" + cid,
+            type: "post",
+            data: {
+                _method: "delete"
+            },
+            success: function(respTxt) {
+                if (respTxt.data == 1) {
+                    alert("删除成功！");
+                    var tr = td1.parent();
+                    tr.remove();
+                } else {
+                    alert("删除失败！")
+                }
+                location.href = "customer.html";
+            }
+        });
+    });
+
+    //修改
+    $("#table1").on("click",".xg",function (){
+       //获取值
+       var td1 = $(this).parent().prevAll().last();
+       var cid = td1.html();
+       location.href = "updateCustomer.html?cid="+cid;
+    });
+</script>
+</body>
+
+</html>

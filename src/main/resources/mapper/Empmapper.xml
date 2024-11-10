@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zrzcrm.mapper.EmpMapper">
+
+    <!--    注册-->
+    <insert id="addEmp" parameterType="Emp">
+        insert into emp values (null,#{ename},#{esex},#{etel},'01.jpg',#{username},#{passwd})
+    </insert>
+
+    <!--  登录-->
+    <select id="findEmpByUsername" resultType="Emp">
+        select * from emp where username = #{username}
+    </select>
+    <!--  登录-->
+    <select id="findEmpByEid" resultType="Emp">
+        select * from emp where eid = #{eid}
+    </select>
+
+<!--    修改密码-->
+    <update id="updatePasswd">
+        update emp set passwd = #{passwd} where eid =#{eid};
+    </update>
+</mapper>

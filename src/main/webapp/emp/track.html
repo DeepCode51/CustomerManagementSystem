@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>客户界面</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      margin-top: 10px;
+      margin-left: 20px;
+    }
+    table {
+      width: 100%;
+      margin: 10px;
+    }
+
+    table th {
+      color: white;
+      text-align: center;
+      background-color: #334259;
+    }
+
+    table td {
+      text-align: center;
+    }
+
+    span{
+      background-color: #334259;
+      color: white;
+      border-radius: 20%;
+      font-size: 16px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1 style="text-align: center">跟踪信息</h1>
+<a id="aadd"><input type="button"  value="添加跟踪信息" style="font-size: 20px"></a>
+<table border="1" align="center" cellspacing="0">
+
+</table>
+
+<script src="../js/jquery-3.6.0.js"></script>
+
+<script>
+
+  var url = location.href;
+  var eid = url.substring(url.lastIndexOf("=") + 1);
+  var a = document.getElementById("aadd");
+  a.href = 'addTrack.html?eid='+eid;
+
+  $.ajax({
+    //同步请求
+    async: false,
+    url: "/tra",
+    type: "get",
+    success: function(respTxt) {
+      var tracks = respTxt.data;
+
+      $("table").empty();
+      var tr1 = $("<tr></tr>");
+
+      var th1 = $("<th style='height: 20px'>信息编号</th>");
+      var th2 = $("<th style='height: 20px'>客户姓名</th>");
+      var th3 = $("<th style='height: 20px'>员工姓名</th>");
+      var th4 = $("<th style='height: 20px'>跟踪记录</th>");
+      var th5 = $("<th style='height: 20px'>意向</th>");
+      var th6 = $("<th style='height: 20px'>操作</th>");
+      tr1.append(th1);
+      tr1.append(th2);
+      tr1.append(th3);
+      tr1.append(th4);
+      tr1.append(th5);
+      tr1.append(th6);
+      $("table").append(tr1);
+      if (tracks.size != 0) {
+        for (var tk of tracks) {
+          var tr = $("<tr style='line-height: 5'></tr>");
+
+          var td1 = $("<td>" + tk.tid + "</td>");
+          var td2 = $("<td>" + tk.customer.cname + "</td>");
+          var td3 = $("<td>" + tk.emp.ename + "</td>");
+          var td4 = $("<td>" + tk.record + "</td>");
+          var td5 = $("<td>" + tk.intention + "</td>");
+          var td6 = $("<td><span style='margin-left:10px;' class='sc'>删除</span><span style='margin-left:10px;' class='xg'>修改</span> </td>");
+
+          tr.append(td1);
+          tr.append(td2);
+          tr.append(td3);
+          tr.append(td4);
+          tr.append(td5);
+          tr.append(td6);
+
+          $("table").append(tr);
+        }
+      }
+    }
+  });
+
+  //删除操作
+  // $(".sc").click(function() {
+  $("table").on("click",".sc",function () {
+    var flag = window.confirm("你确定要删除这条数据吗？");
+    if (!flag) {
+      return;
+    }
+
+    //删除
+    //获取值
+    var td1 = $(this).parent().prevAll().last();
+    var tid = td1.html();
+
+    $.ajax({
+      url: "/tra/"+tid,
+      type: "post",
+      data: {
+        _method: "delete",
+      },
+      success: function(respTxt) {
+        if (respTxt.data == 1) {
+          alert("删除成功！");
+          //页面中移除这一行
+          var tr = td1.parent();
+          tr.remove();
+        } else {
+          alert("删除失败！");
+        }
+      }
+    });
+  });
+
+
+  // 修改操作
+  $("table").on("click",".xg",function () {
+    var td1 = $(this).parent().prevAll().last();
+    var tid = td1.html();
+    location.href = "updateTrack.html?tid=" + tid;
+  });
+</script>
+
+</body>
+
+</html>

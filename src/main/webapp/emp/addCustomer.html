@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        h1 {
+            margin-top: 10px;
+            margin-left: 20px;
+        }
+        
+        #addCus {
+            width: 600px;
+            height: 250px;
+            margin: 0 auto;
+            border: 1px solid gray;
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            box-shadow: 0 0 5px black;
+        }
+        
+        #addCus span {
+            display: inline-block;
+            height: 30px;
+            line-height: 30px;
+            width: 80px;
+            text-align: left;
+        }
+        
+        #addCus .ip {
+            width: 220px;
+            height: 20px;
+            line-height: 20px;
+            margin-top: 10px;
+        }
+        
+        #sex {
+            width: 220px;
+            display: inline-block;
+            text-align: left;
+            margin-top: 10px;
+        }
+        
+        #btn {
+            height: 40px;
+            line-height: 20px;
+            width: 100px;
+            margin-top: 20px;
+            margin-left: -40px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 style="text-align: center;">添加新客户</h1>
+    <div id="addCus">
+        <span>客户姓名：</span><input type="text" id="cname" class="ip"><br>
+        <span>性别：</span>
+        <div id="sex">
+            <input type="radio" name="csex" value="男" checked>男
+            <input type="radio" name="csex" value="女">女
+        </div><br>
+        <span>电话：</span><input type="text" id="ctel" class="ip"><br>
+        <span>职位：</span><input type="text" id="cjob" class="ip"><br>
+        <span>公司：</span><input type="text" id="ccompany" class="ip"><br>
+
+        <input type="button" value="添加新客户" id="btn"> &nbsp;&nbsp;&nbsp;&nbsp; <input  style="height: 40px;line-height: 20px;width: 100px;" type="reset" value="重置" >
+    </div>
+
+    <script src="../js/jquery-3.6.0.js"></script>
+
+    <script>
+        $("#btn").click(function() {
+            var cname = $("#cname").val();
+            var csex = $("input[name='csex']:checked").val();
+            var ctel = $("#ctel").val();
+            var cjob = $("#cjob").val();
+            var ccompany = $("#ccompany").val();
+
+            //校验？？
+
+            //请求
+            $.ajax({
+                url: "/cus",
+                type: "post",
+                data: {
+                    // action: "add",
+                    cname: cname,
+                    csex: csex,
+                    ctel: ctel,
+                    cjob: cjob,
+                    ccompany: ccompany
+                },
+                success: function(respTxt) {
+                    // alert(respTxt);
+                    if (respTxt.data == 1) {
+                        alert("添加成功！");
+                        location.href = "customer.html";
+                    } else {
+                        alert("添加失败！");
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

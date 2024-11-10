@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>管理首页</title>
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+
+<body >
+<header>
+    <h1>CRM客户关系管理系统</h1>
+    <a id="loginOut" href="../login.html">退出登录</a>
+    <p id="welcome">你好，XXX</p>
+    <img src="" id="tx" class="touxinang">
+</header>
+<aside >
+    <ul>
+        <li><a href="customer.html" target="main">客户信息管理</a></li>
+        <li><a id="atrack" href="" target="main">跟踪信息管理</a></li>
+        <li><a id="ahref" href="" target="main">修改密码</a></li>
+    </ul>
+</aside>
+
+<article style="background-image: url('../images/03(1).png');">
+    <iframe name="main" src="welcome.html" frameborder="0"></iframe>
+</article>
+
+<script src="../js/jquery-3.6.0.js"></script>
+<script>
+
+    var url = location.href;
+    // alert(url);
+    var eid = url.substring(url.lastIndexOf("=")+1);
+
+    var a = document.getElementById("ahref");
+    a.href = 'updatePasswd.html?eid='+eid;
+
+    var a = document.getElementById("atrack");
+    a.href = 'track.html?eid='+eid;
+    $.ajax({
+        url: "/crm/findEmpByEid",
+        type: "get",
+        data: {
+            eid: eid
+        },
+        success: function(respTxt) {
+            if (respTxt.data.username != null) {
+                $("#welcome").html("你好, " + respTxt.data.username);
+                document.getElementById("tx").src = "http://localhost:8080/images/01.jpg"
+            }
+        }
+    });
+</script>
+
+</body>
+
+</html>
